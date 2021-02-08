@@ -10,6 +10,8 @@ type boardProps = {
   cells:boolean[]
   onClick: any
   cellSize: number
+  cellHeightLength: number
+  cellWidthLength: number
 }
 
 export function Board(props: boardProps) {
@@ -25,9 +27,8 @@ export function Board(props: boardProps) {
       />
     )
   }
-  const cellLength = props.cells.length
-  const sqrt = String(Math.sqrt(cellLength))
-  const template = "repeat(" + sqrt  + ", " + sqrt + "fr)"
+  const cellLength = props.cellHeightLength * props.cellWidthLength
+  const template = "repeat(" + String(props.cellWidthLength)  + ", " + String(props.cellHeightLength) + "fr)"
   return (
     <Grid templateColumns={template} gap={0}>
       {Array(cellLength)
