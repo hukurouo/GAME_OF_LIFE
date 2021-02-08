@@ -47,6 +47,7 @@ class Home extends React.Component<{}, typeHomeState> {
 
   componentDidMount() {
     this.updateCellSize()
+    setTimeout((()=>{this.updateCellSize()}),10)
   }
 
   updateCellSize(){
@@ -122,14 +123,16 @@ class Home extends React.Component<{}, typeHomeState> {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Center>
-      <Heading mb={6}>Game Of Life Mini</Heading>
+      <Heading mb={4} size="lg">Game Of Life Mini</Heading>
       </Center>
       <Center>
         
       </Center>
       <Center mb={4}>
-        <Box minWidth={100}>個体数：{this.state.lives.length}</Box>
-        <Box minWidth={100}>世代：{this.state.generation}</Box>
+        <Box textAlign="center">個体数：</Box>
+        <Box minWidth={37} textAlign="left">{this.state.lives.length}</Box>
+        <Box textAlign="center">世代：</Box>
+        <Box minWidth={37} textAlign="left">{this.state.generation}</Box>
       </Center>
       <Center mb={4}>
         <Board
