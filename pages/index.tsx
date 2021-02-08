@@ -47,7 +47,7 @@ class Home extends React.Component<{}, typeHomeState> {
 
   componentDidMount() {
     this.updateCellSize()
-    setTimeout((()=>{this.updateCellSize()}),10)
+    setTimeout((()=>{this.updateCellSize()}),1000)
   }
 
   updateCellSize(){
