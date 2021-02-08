@@ -10,6 +10,7 @@ Slider,
 import { Board } from "../Components/Board"
 import { TrashModal } from "../Components/TrashModal"
 import { ExampleModal } from "../Components/ExampleModal"
+import { InfoModal } from "../Components/InfoModal"
 
 type typeHomeState = {
   status: string
@@ -20,6 +21,7 @@ type typeHomeState = {
   generation: number
   cells: boolean[]
   lives: number[]
+  prevLives: number[][]
 } 
 
 class Home extends React.Component<{}, typeHomeState> {
@@ -33,7 +35,8 @@ class Home extends React.Component<{}, typeHomeState> {
       speed: 2,
       generation: 0,
       cells: Array((27*27)+1).fill(false),
-      lives: []
+      lives: [],
+      prevLives: [[]],
     }
   }
 
@@ -64,11 +67,21 @@ class Home extends React.Component<{}, typeHomeState> {
   }
 
   nextGeneration = () => {
+    const prevLives = this.state.prevLives
+    prevLives.push(this.state.lives)
+    if (prevLives.length == 3){
+      prevLives.shift()
+    }
     const tmpLives = this.state.lives
     const cellLength = this.state.cellWidthLength * this.state.cellHeightLength
     const [newCellArray, newLives] = generation(this.state.cells, this.state.lives, cellLength)
     this.setState({cells: newCellArray, lives: newLives})
-    if (String(tmpLives) == String(newLives)){this.stopAutoGen()}
+    if (String(tmpLives) == String(newLives) || String(prevLives[0]) == String(newLives)){
+      this.stopAutoGen()
+      if(tmpLives.length == 0){
+        this.setState({generation: -1})
+      }
+    }
   }
 
   timerObj: any
@@ -180,10 +193,7 @@ class Home extends React.Component<{}, typeHomeState> {
           </Button>
         )}
       <TrashModal trash={()=>{this.trash()}}/>
-      
-      <Button bg="gray.300" ml={2} mb={6} onClick={()=>{}}>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-      </Button>
+      <InfoModal/>
       <ExampleModal setExample={(name: string)=>{this.setExample(name)}}/>  
       <Button colorScheme="blue" mb={6} onClick={()=>{}}>
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-twitter"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
@@ -232,7 +242,6 @@ function aroundCells(index: number, width:number, cellLength:number){
                  )
   }
   const roundArounds = arounds.map((num)=>{return Math.round(num)})
-  console.log([index,roundArounds])
   return roundArounds
 }
 
@@ -241,7 +250,6 @@ function generation(cells, lives, cellLength){
   for (let i=1; i<=cellLength; i++){
     initMap.push([i,0])
   }
-  console.log("gen")
   const width = Math.sqrt(cells.length)
   const cellMap = new Map(initMap)
   lives.forEach((cellIndex)=>{

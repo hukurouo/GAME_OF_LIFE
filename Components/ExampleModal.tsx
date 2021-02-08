@@ -26,7 +26,7 @@ export function ExampleModal(props) {
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent bg="gray.50">
           <ModalHeader>パターンの例</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
