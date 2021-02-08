@@ -27,7 +27,7 @@ class Home extends React.Component<{}, typeHomeState> {
     super(props);
     this.state = {
       status: "stop",
-      cellSize: 10,
+      cellSize: null,
       cellWidthLength: 27,
       cellHeightLength: 27,
       speed: 2,
@@ -47,15 +47,20 @@ class Home extends React.Component<{}, typeHomeState> {
 
   componentDidMount() {
     this.updateCellSize()
-    setTimeout((()=>{this.updateCellSize()}),1000)
   }
 
   updateCellSize(){
     const cellY = Math.round((window.innerHeight-200)/(27*5))
     const cellX = Math.round((window.innerWidth-20)/(27*5))
-    console.log([cellX, cellY])
     const min = Math.min(cellY, cellX)
     this.setState({cellSize: min})
+  }
+
+  initialCellSize(){
+    const cellY = Math.round((window.innerHeight-200)/(27*5))
+    const cellX = Math.round((window.innerWidth-20)/(27*5))
+    const min = Math.min(cellY, cellX)
+    return min
   }
 
   nextGeneration = () => {
