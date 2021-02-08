@@ -8,7 +8,8 @@ import { Container, Center, Heading, Button,
 Slider,
 } from "@chakra-ui/react";
 import { Board } from "../Components/Board"
-import { ConfigModal } from "../Components/ConfigModal"
+import { TrashModal } from "../Components/TrashModal"
+import { ExampleModal } from "../Components/ExampleModal"
 
 type typeHomeState = {
   status: string
@@ -26,12 +27,12 @@ class Home extends React.Component<{}, typeHomeState> {
     super(props);
     this.state = {
       status: "stop",
-      cellSize: 3,
+      cellSize: 10,
       cellWidthLength: 27,
       cellHeightLength: 27,
       speed: 2,
       generation: 0,
-      cells: Array(27*27).fill(false),
+      cells: Array((27*27)+1).fill(false),
       lives: []
     }
   }
@@ -46,13 +47,6 @@ class Home extends React.Component<{}, typeHomeState> {
 
   componentDidMount() {
     this.updateCellSize()
-    let queue: NodeJS.Timeout;
-    window.addEventListener("resize", () => {
-      clearTimeout(queue);
-      queue = setTimeout(() => {
-        this.updateCellSize()
-      }, 500);
-    });
   }
 
   updateCellSize(){
@@ -89,38 +83,53 @@ class Home extends React.Component<{}, typeHomeState> {
     clearInterval(this.timerObj)
     this.setState({
       status: "stop",
-      cells: Array(27*27).fill(false),
+      cells: Array((27*27)+1).fill(false),
       lives: [],
       generation: 0
     })
+  }
+
+  setExample = (name: string) => {
+    switch (name) {
+      case "軽量級宇宙船":
+        const lives_space = [283,286,309,336,340,363,364,365,366]
+        this.setExampleToCells(lives_space)
+        break
+      case "銀河":
+        const lives_ginga = [228,229,255,281,282,285,286,287,308,312,314,315,316,335,336,338,343,364,366,387,392,394,395,414,415,416,418,422,443,444,445,448,449,475,501,502]
+        this.setExampleToCells(lives_ginga)
+        break
+      case "グライダー":
+        const lives_guraida = [337,338,339,364,392]
+        this.setExampleToCells(lives_guraida)
+        break
+    }
+  }
+
+  setExampleToCells = (lives: number[]) => {
+    const _cells = Array((27*27)+1).fill(false)
+      lives.forEach((cellIndex: number)=>{
+        _cells[cellIndex] = true
+      })
+      this.setState({lives: lives, cells: _cells})
   }
 
   render(){
     return (
     <Container maxW="full" minH="100vh" bg="gray.100" py={6}>
       <Head>
-        <title>Game Of Life</title>
+        <title>Game Of Life Mini</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Center>
-      <Heading mb={6}>Game Of Life</Heading>
+      <Heading mb={6}>Game Of Life Mini</Heading>
       </Center>
       <Center>
-        {this.state.status == "stop" ? (
-          <Button colorScheme="teal" mb={6} onClick={()=>{this.startAutoGen()}}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-play"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-          </Button>
-        ):(
-          <Button colorScheme="teal" mb={6} onClick={()=>{this.stopAutoGen()}}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-pause"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
-          </Button>
-        )}
-        <Button bg="red.200" _hover={{ bg: 'red.400' }} ml={4} mb={6} onClick={()=>{this.trash()}}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-          </Button>
+        
       </Center>
       <Center mb={4}>
-        個体数：{this.state.lives.length}　世代：{this.state.generation}
+        <Box minWidth={100}>個体数：{this.state.lives.length}</Box>
+        <Box minWidth={100}>世代：{this.state.generation}</Box>
       </Center>
       <Center mb={4}>
         <Board
@@ -153,8 +162,24 @@ class Home extends React.Component<{}, typeHomeState> {
               </FormControl>
       </Center>
       <Center>
-      <Button bg="orange.200" mr={4} mb={6} onClick={()=>{this.startAutoGen()}}>Preset</Button>
-      <Button colorScheme="blue" mb={6} onClick={()=>{this.startAutoGen()}}>Share</Button>
+      {this.state.status == "stop" ? (
+          <Button colorScheme="teal" mb={6} onClick={()=>{this.startAutoGen()}}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-play"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          </Button>
+        ):(
+          <Button colorScheme="teal" mb={6} onClick={()=>{this.stopAutoGen()}}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-pause"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+          </Button>
+        )}
+      <TrashModal trash={()=>{this.trash()}}/>
+      
+      <Button bg="gray.300" ml={2} mb={6} onClick={()=>{}}>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+      </Button>
+      <ExampleModal setExample={(name: string)=>{this.setExample(name)}}/>  
+      <Button colorScheme="blue" mb={6} onClick={()=>{}}>
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-twitter"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+      </Button>
       </Center>
     </Container>
   ); 
@@ -162,11 +187,45 @@ class Home extends React.Component<{}, typeHomeState> {
 }
 export default Home
 
-function aroundCells(index: number, width:number, cellLength){
+function aroundCells(index: number, width:number, cellLength:number){
   const arounds = []
-  arounds.push(index-1, index+1, index-1+width, index+width, index+1+width, index-width, index-width+1, index-width-1)
-  const validArounds = arounds.filter(index => 0 < index && index <= cellLength)
-  return validArounds
+  if (index == 1){
+    arounds.push(729,703,704,27,2,54,28,29)
+  } else if (index == 27){
+    arounds.push(728,729,703,26,1,28,53,54)
+  } else if (index == 703){
+    arounds.push(702,676,677,729,704,27,1,2)
+  } else if (index == 729){
+    arounds.push(701,702,676,728,703,26,27,1)
+  } else if (1 < index && index < 27){
+    arounds.push((width*(width-1))+index-2, (width*(width-1))+index-1, (width*(width-1))+index,
+                  index-1,                    index+1, 
+                  index+width-1, index+width, index+width+1
+                  )
+  } else if (index % 27 == 1){
+    arounds.push(index-1,index-width, index-width+1,
+                 index+width-1,index+1, 
+                 index+(width*2)-1,index+width, index+width+1
+                 )
+  } else if (index % 27 == 0){
+    arounds.push(index-width-1, index-width, index-(width*2)+1,
+                 index-1,                    index-width+1,
+                 index+width-1, index+width, index+1
+                 )
+  } else if (703 < index && index < 729){
+    arounds.push(index-width-1, index-width, index-width+1,
+                 index-1,                    index+1, 
+                 index-(width*(width-1)), index-(width*(width-1))+1, index-(width*(width-1))+2,
+                 )
+  } else {
+    arounds.push(index-width-1, index-width, index-width+1,
+                 index-1,                    index+1, 
+                 index+width-1, index+width, index+width+1
+                 )
+  }
+  const roundArounds = arounds.map((num)=>{return Math.round(num)})
+  console.log([index,roundArounds])
+  return roundArounds
 }
 
 function generation(cells, lives, cellLength){
@@ -185,7 +244,7 @@ function generation(cells, lives, cellLength){
   })
   const newCellArray = []
   const newLives = []
-  Array(cellLength).fill("").forEach((_val,index)=>{
+  Array(cellLength+1).fill("").forEach((_val,index)=>{
     const count = cellMap.get(index)
     if (cells[index] == true) {
       if (count < 2 || count > 3) {

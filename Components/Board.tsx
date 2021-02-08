@@ -4,6 +4,7 @@ type cellProps = {
   isLive: boolean
   onClick: any
   cellSize: number
+  num:number
 }
 
 type boardProps = {
@@ -19,6 +20,7 @@ export function Board(props: boardProps) {
     return (
       <Cell
         key={i}
+        num={i}
         isLive={props.cells[i+1]}
         cellSize={props.cellSize}
         onClick={() => {
