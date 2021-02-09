@@ -64,15 +64,15 @@ export function InfoModal(props) {
             <Text mt={4}>下に中央のセルにおける次のステップでの生死の例を示す。生きているセルは■、死んでいるセルは□で表す。</Text>
             <Center><Image src="https://i.imgur.com/SKOdefQ.png" alt="セルの生死についての説明図" my={4}/>
             </Center>
-            <Text mt={4}>
-              このアプリでは、フィールドの上下と左右がループしています。また、周期2の無限ループになると自動で停止状態になります。
+            <Text mt={4} mb={4}>
+              このアプリでは、フィールドの上下と左右が繋がっており、ループ構造になっています。
             </Text>
             
             
           </ModalBody>
 
           <ModalFooter pt={0}>
-            <Button variant="ghost" onClick={onClose}>
+            <Button variant="outline" onClick={onClose}>
               閉じる
             </Button>
           </ModalFooter>

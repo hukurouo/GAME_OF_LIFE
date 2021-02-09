@@ -1,9 +1,5 @@
 import React from 'react'
 import {
-  Slider,
-  SliderTrack,
-  SliderFilledTrack,
-  SliderThumb,
   Button,
   Modal,
   ModalOverlay,
@@ -11,11 +7,6 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
-  FormControl,
-  FormLabel,
-  Input,
-  Checkbox,
-  Text,
   ModalCloseButton,
   useDisclosure
 } from '@chakra-ui/react'
@@ -34,7 +25,7 @@ export function TrashModal(props) {
           <ModalHeader>確認</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            フィールドを本当に初期化しますか？
+            フィールドを本当にリセットしますか？
           </ModalBody>
 
           <ModalFooter>

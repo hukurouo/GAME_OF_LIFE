@@ -50,7 +50,7 @@ function Cell(props: cellProps) {
       bg={cellColor(props.isLive)}
       height={props.cellSize}
       boxShadow="xs"
-      _hover={{ bg: 'gray.400' }}
+      _hover={{ bg: 'gray.300' }}
       _focus={{
         outline: 'none'
       }}

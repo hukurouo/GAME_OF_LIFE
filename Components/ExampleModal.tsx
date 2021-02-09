@@ -21,7 +21,7 @@ export function ExampleModal(props) {
   return (
     <>
       <Button bg="orange.200" ml={2} mr={2} mb={6} onClick={()=>{onOpen()}}>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-book"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -36,6 +36,18 @@ export function ExampleModal(props) {
             </Button>
           </ModalBody>
           <ModalBody>
+            ペンタデカスロン：
+            <Button colorScheme="gray" mr={3} onClick={()=>{props.setExample("ペンタデカスロン"); onClose()}}>
+              セットする
+            </Button>
+          </ModalBody>
+          <ModalBody>
+          パルサー：
+            <Button colorScheme="gray" mr={3} onClick={()=>{props.setExample("パルサー"); onClose()}}>
+              セットする
+            </Button>
+          </ModalBody>
+          <ModalBody>
             グライダー：
             <Button colorScheme="gray" mr={3} onClick={()=>{props.setExample("グライダー"); onClose()}}>
               セットする
@@ -44,6 +56,12 @@ export function ExampleModal(props) {
           <ModalBody>
             軽量級宇宙船：
             <Button colorScheme="gray" mr={3} onClick={()=>{props.setExample("軽量級宇宙船"); onClose()}}>
+              セットする
+            </Button>
+          </ModalBody>
+          <ModalBody>
+            ランダム配置：
+            <Button colorScheme="gray" mr={3} onClick={()=>{props.setExample("ランダム"); onClose()}}>
               セットする
             </Button>
           </ModalBody>
