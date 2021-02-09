@@ -166,7 +166,7 @@ class Home extends React.Component<{}, typeHomeState> {
     var b_str = Array.from(ia, (e:number) => String.fromCharCode(e)).join("")
     // BinaryString -> base64
     var base64 = btoa(b_str)
-    this.setState({base64: "data:image/jpg;base64," +  base64 })
+    this.setState({base64: "data:image/gif;base64," +  base64 })
     
   }
 

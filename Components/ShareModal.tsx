@@ -30,9 +30,9 @@ export function ShareModal(props) {
               gif画像を生成する
             </Button>
           </ModalBody>
-          <a href={props.base64} download={"gameoflife" + Date.now() + ".gif"}>
+          
             <Image src={props.base64} p={4}/>
-          </a> 
+          
           <ModalBody>
             <Text px={4} mb={0}>生成したgif画像を添付してツイートしてみよう！</Text>
           </ModalBody>
