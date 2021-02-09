@@ -30,6 +30,7 @@ type typeHomeState = {
   cellHeightLength: number
   speed: number
   grid: boolean
+  base64: string
   generation: number
   cells: boolean[]
   lives: number[]
@@ -45,6 +46,7 @@ class Home extends React.Component<{}, typeHomeState> {
       cellSize: null,
       cellWidthLength: 27,
       cellHeightLength: 27,
+      base64: '',
       speed: 2,
       grid: true,
       generation: 0,
@@ -159,16 +161,13 @@ class Home extends React.Component<{}, typeHomeState> {
     encoder.finish()
     var ia = encoder.out.getData()
     var blob = new Blob([ia], { type: 'application/octet-stream' })
-    console.log(blob)
-    var a = document.createElement('a')
-    //BlobURLを取得しa要素のsrcへ与える
-    a.href = window.URL.createObjectURL(blob)
-    //PNGファイル名の命名
-    const time = Date.now()
-    a.download = 'gameoflife' + time + '.gif'
-    a.click()
-    //body要素にa要素を追加
-    document.getElementsByTagName('body')[0].appendChild(a)
+
+    // Uint8Array -> BinaryString
+    var b_str = Array.from(ia, (e:number) => String.fromCharCode(e)).join("")
+    // BinaryString -> base64
+    var base64 = btoa(b_str)
+    this.setState({base64: "data:image/jpg;base64," +  base64 })
+    
   }
 
   setExample = (name: string) => {
@@ -224,6 +223,12 @@ class Home extends React.Component<{}, typeHomeState> {
         <Head>
           <title>Game Of Life Mini</title>
           <link rel="icon" href="/favicon.ico" />
+          <meta
+            property="og:image"
+            content={`https://i.imgur.com/1dUkirGl.png`}
+          />
+          <meta name="og:title" content={"ライフゲーム"} />
+          <meta name="twitter:card" content="summary" />
         </Head>
         <Center>
           <Heading mb={4} size="lg">
@@ -349,7 +354,7 @@ class Home extends React.Component<{}, typeHomeState> {
           />
           
         </Center>
-        <Footer gifGen={()=>{this.gifGen()}}/>
+        <Footer gifGen={()=>{this.gifGen()}} base64={this.state.base64}/>
       </Container>
     )
   }

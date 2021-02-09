@@ -8,7 +8,7 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  useDisclosure,Text
+  useDisclosure,Text,Image
 } from '@chakra-ui/react'
 
 export function ShareModal(props) {
@@ -23,9 +23,18 @@ export function ShareModal(props) {
           <ModalHeader>シェアする</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+            <Text px={4} mb={0}>現在フィールドにあるセルの1~30世代目までを描画します。</Text>
+          </ModalBody>
+          <ModalBody>
           　<Button colorScheme="gray" onClick={()=>{props.gifGen()}}>
-              gif画像をダウンロードする
+              gif画像を生成する
             </Button>
+          </ModalBody>
+          <a href={props.base64} download={"gameoflife" + Date.now() + ".gif"}>
+            <Image src={props.base64} p={4}/>
+          </a> 
+          <ModalBody>
+            <Text px={4} mb={0}>生成したgif画像を添付してツイートしてみよう！</Text>
           </ModalBody>
           <ModalBody>
           　<Button bg="blue.300" onClick={()=>{props.twitterShare()}}>
@@ -33,10 +42,7 @@ export function ShareModal(props) {
             </Button>
             
           </ModalBody>
-          <ModalBody>
-            <Text px={4} mb={0}>生成したgif画像を添付してツイートしてみよう！</Text>
           
-          </ModalBody>
           <ModalFooter>
             
             <Button bg="gray.100" variant="ghost" onClick={onClose}>キャンセル</Button>
