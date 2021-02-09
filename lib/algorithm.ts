@@ -36,6 +36,40 @@ export function generation(cells, lives, cellLength) {
   return [newCellArray, newLives]
 }
 
+export function generationLives(lives, cellWidth){
+  const cellLength = cellWidth*cellWidth
+  const initMap: any[] = []
+  for (let i = 1; i <= cellLength; i++) {
+    initMap.push([i, 0])
+  }
+  const width = cellWidth
+  const cellMap = new Map(initMap)
+  lives.forEach((cellIndex) => {
+    aroundCells(cellIndex, width, cellLength).forEach((aroundCellsIndex) => {
+      const cnt = cellMap.get(aroundCellsIndex) as number
+      cellMap.set(aroundCellsIndex, cnt + 1)
+    })
+  })
+  const newLives = []
+  Array(cellLength + 1)
+    .fill('')
+    .forEach((_val, index) => {
+      const count = cellMap.get(index)
+      if (lives.includes(index)) {
+        if (count < 2 || count > 3) {
+        } else {
+          newLives.push(index)
+        }
+      } else {
+        if (count == 3) {
+          newLives.push(index)
+        } else {
+        }
+      }
+    })
+  return newLives
+}
+
 function aroundCells(index: number, width: number, cellLength: number) {
   const arounds = []
   if (index == 1) {

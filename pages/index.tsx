@@ -6,8 +6,8 @@ import { ExampleModal } from '../Components/ExampleModal'
 import { InfoModal } from '../Components/InfoModal'
 import Footer from '../Components/Footer'
 import { RedoModal } from '../Components/RedoModal'
-import { lives_ginga, lives_guraida, lives_space, lives_pulsar, lives_penta } from '../lib/exampleLife' 
-import { generation } from '../lib/algorithm'
+import { lives_ginga, lives_guraida, lives_space, lives_pulsar, lives_penta } from '../lib/exampleLife'
+import { generation, generationLives } from '../lib/algorithm'
 import {
   Container,
   Center,
@@ -19,7 +19,8 @@ import {
   FormLabel,
   SliderTrack,
   SliderThumb,
-  Slider
+  Slider,
+  Checkbox
 } from '@chakra-ui/react'
 
 type typeHomeState = {
@@ -28,6 +29,7 @@ type typeHomeState = {
   cellWidthLength: number
   cellHeightLength: number
   speed: number
+  grid: boolean
   generation: number
   cells: boolean[]
   lives: number[]
@@ -44,11 +46,12 @@ class Home extends React.Component<{}, typeHomeState> {
       cellWidthLength: 27,
       cellHeightLength: 27,
       speed: 2,
+      grid: true,
       generation: 0,
       cells: Array(27 * 27 + 1).fill(false),
       lives: [],
-      startCells:Array(27 * 27 + 1).fill(false),
-      startLives: [],
+      startCells: Array(27 * 27 + 1).fill(false),
+      startLives: []
     }
   }
 
@@ -86,10 +89,10 @@ class Home extends React.Component<{}, typeHomeState> {
 
   timerObj: any
   startAutoGen = () => {
-    this.setState({ 
+    this.setState({
       status: 'running',
       startCells: this.state.cells,
-      startLives: this.state.lives 
+      startLives: this.state.lives
     })
     this.timerObj = setInterval(() => {
       this.nextGeneration()
@@ -120,6 +123,52 @@ class Home extends React.Component<{}, typeHomeState> {
       lives: this.state.startLives,
       generation: 0
     })
+  }
+
+  gifGen = () => {
+    console.log('gif')
+    const GIFEncoder = require('gifencoder')
+    const { createCanvas } = require('canvas')
+
+    const encoder = new GIFEncoder(540, 270)
+    encoder.start()
+    encoder.setRepeat(0) // 0 for repeat, -1 for no-repeat
+    encoder.setDelay(500) // frame delay in ms
+    encoder.setQuality(10) // image quality. 10 is default.
+    
+    let _lives = this.state.lives
+    let prevlivesLength = 1
+    Array(30).fill('').forEach((_v)=>{
+      if (_lives.length == 0 && prevlivesLength == 0) {
+        return
+      }
+      const canvas = createCanvas(540, 270)
+      const ctx = canvas.getContext('2d')
+      _lives.forEach((live)=>{
+        live = live - 1
+        const x = (live % this.state.cellWidthLength)
+        const y = Math.floor(live / this.state.cellWidthLength)
+        ctx.fillStyle = '#ffffff'
+        ctx.fillRect((10*x)+135, 10*y, 10, 10)
+      })
+      encoder.addFrame(ctx)
+      prevlivesLength = _lives.length
+      _lives = generationLives(_lives, this.state.cellWidthLength)
+    })
+    
+    encoder.finish()
+    var ia = encoder.out.getData()
+    var blob = new Blob([ia], { type: 'application/octet-stream' })
+    console.log(blob)
+    var a = document.createElement('a')
+    //BlobURLを取得しa要素のsrcへ与える
+    a.href = window.URL.createObjectURL(blob)
+    //PNGファイル名の命名
+    const time = Date.now()
+    a.download = 'gameoflife' + time + '.gif'
+    a.click()
+    //body要素にa要素を追加
+    document.getElementsByTagName('body')[0].appendChild(a)
   }
 
   setExample = (name: string) => {
@@ -157,12 +206,14 @@ class Home extends React.Component<{}, typeHomeState> {
   setRandomCells = () => {
     const _cells = Array(27 * 27 + 1).fill(false)
     const _lives = []
-    Array(27 * 27 + 1).fill('').forEach((_v, cellIndex) => {
-      if (Math.random()*100 < 50){
-        _cells[cellIndex] = true
-        _lives.push(cellIndex)
-      }
-    })
+    Array(27 * 27 + 1)
+      .fill('')
+      .forEach((_v, cellIndex) => {
+        if (Math.random() * 100 < 50) {
+          _cells[cellIndex] = true
+          _lives.push(cellIndex)
+        }
+      })
     clearInterval(this.timerObj)
     this.setState({ lives: _lives, cells: _cells, status: 'stop', generation: 0 })
   }
@@ -194,6 +245,7 @@ class Home extends React.Component<{}, typeHomeState> {
           <Board
             cells={this.state.cells}
             cellSize={this.state.cellSize}
+            grid={this.state.grid}
             cellHeightLength={this.state.cellHeightLength}
             cellWidthLength={this.state.cellWidthLength}
             onClick={(i: number) => {
@@ -224,6 +276,10 @@ class Home extends React.Component<{}, typeHomeState> {
               </SliderTrack>
               <SliderThumb />
             </Slider>
+          </FormControl>
+          <FormControl as="fieldset" ml={6}　maxWidth={150}>
+            <FormLabel as="legend">Grid</FormLabel>
+            <Checkbox defaultIsChecked onChange={(e)=>{this.setState({grid: e.target.checked})}}>枠の表示</Checkbox>
           </FormControl>
         </Center>
         <Center>
@@ -275,7 +331,11 @@ class Home extends React.Component<{}, typeHomeState> {
               </svg>
             </Button>
           )}
-          <RedoModal redo={()=>{this.redo()}}></RedoModal>
+          <RedoModal
+            redo={() => {
+              this.redo()
+            }}
+          ></RedoModal>
           <TrashModal
             trash={() => {
               this.trash()
@@ -287,11 +347,11 @@ class Home extends React.Component<{}, typeHomeState> {
               this.setExample(name)
             }}
           />
+          
         </Center>
-        <Footer/>
+        <Footer gifGen={()=>{this.gifGen()}}/>
       </Container>
     )
   }
 }
 export default Home
-
