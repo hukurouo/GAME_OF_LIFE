@@ -53,7 +53,7 @@ class Home extends React.Component<{}, typeHomeState> {
       cells: Array(27 * 27 + 1).fill(false),
       lives: [],
       startCells: Array(27 * 27 + 1).fill(false),
-      startLives: []
+      startLives: [],
     }
   }
 
@@ -128,7 +128,6 @@ class Home extends React.Component<{}, typeHomeState> {
   }
 
   gifGen = () => {
-    console.log('gif')
     const GIFEncoder = require('gifencoder')
     const { createCanvas } = require('canvas')
 
@@ -140,7 +139,7 @@ class Home extends React.Component<{}, typeHomeState> {
     
     let _lives = this.state.lives
     let prevlivesLength = 1
-    Array(30).fill('').forEach((_v)=>{
+    Array(25).fill('').forEach((_v)=>{
       if (_lives.length == 0 && prevlivesLength == 0) {
         return
       }
@@ -160,14 +159,11 @@ class Home extends React.Component<{}, typeHomeState> {
     
     encoder.finish()
     var ia = encoder.out.getData()
-    var blob = new Blob([ia], { type: 'application/octet-stream' })
-
     // Uint8Array -> BinaryString
     var b_str = Array.from(ia, (e:number) => String.fromCharCode(e)).join("")
     // BinaryString -> base64
     var base64 = btoa(b_str)
-    this.setState({base64: "data:image/gif;base64," +  base64 })
-    
+    this.setState({base64: "data:image/gif;base64," +  base64})
   }
 
   setExample = (name: string) => {
@@ -251,6 +247,7 @@ class Home extends React.Component<{}, typeHomeState> {
             cells={this.state.cells}
             cellSize={this.state.cellSize}
             grid={this.state.grid}
+            status={this.state.status}
             cellHeightLength={this.state.cellHeightLength}
             cellWidthLength={this.state.cellWidthLength}
             onClick={(i: number) => {
@@ -354,7 +351,7 @@ class Home extends React.Component<{}, typeHomeState> {
           />
           
         </Center>
-        <Footer gifGen={()=>{this.gifGen()}} base64={this.state.base64}/>
+        <Footer gifGen={()=>{this.gifGen()}} base64={this.state.base64} />
       </Container>
     )
   }

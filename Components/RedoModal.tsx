@@ -25,7 +25,7 @@ export function RedoModal(props) {
           <ModalHeader>確認</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            初期状態（第一世代）に戻しますか？
+            やり直しますか？
           </ModalBody>
 
           <ModalFooter>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {
   Button,
   Modal,
@@ -12,6 +12,7 @@ import {
 } from '@chakra-ui/react'
 
 export function ShareModal(props) {
+  const [loading, setLoading] = useState(false)
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <>
@@ -23,15 +24,15 @@ export function ShareModal(props) {
           <ModalHeader>シェアする</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text px={4} mb={0}>現在フィールドにあるセルの1~30世代目までを描画します。</Text>
+            <Text px={4} mb={0}>現在フィールドにあるセルの1~25世代目までを描画します。</Text>
           </ModalBody>
           <ModalBody>
-          　<Button colorScheme="gray" onClick={()=>{props.gifGen()}}>
+          　<Button colorScheme="gray" onClick={()=>{props.gifGen(); }}>
               gif画像を生成する
             </Button>
           </ModalBody>
-          
-            <Image src={props.base64} p={4}/>
+          <Image src={props.base64} p={4}/>
+          {props.base64 && <Text px={10} mb={0} fontSize="sm" color="gray.500">PCは右クリック、スマホは画像長押しで保存できます。</Text>}
           
           <ModalBody>
             <Text px={4} mb={0}>生成したgif画像を添付してツイートしてみよう！</Text>

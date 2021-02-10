@@ -5,6 +5,7 @@ type cellProps = {
   onClick: any
   cellSize: number
   num:number
+  status: string
 }
 
 type boardProps = {
@@ -14,6 +15,7 @@ type boardProps = {
   cellHeightLength: number
   cellWidthLength: number
   grid: boolean
+  status: string
 }
 
 export function Board(props: boardProps) {
@@ -22,6 +24,7 @@ export function Board(props: boardProps) {
         <Cell
         key={i}
         num={i}
+        status={props.status}
         isLive={props.cells[i+1]}
         cellSize={props.cellSize}
         onClick={() => {
@@ -35,6 +38,7 @@ export function Board(props: boardProps) {
         <NoGridCell
         key={i}
         num={i}
+        status={props.status}
         isLive={props.cells[i+1]}
         cellSize={props.cellSize}
         onClick={() => {
@@ -68,8 +72,8 @@ function Cell(props: cellProps) {
       width={props.cellSize}
       bg={cellColor(props.isLive)}
       height={props.cellSize}
+      disabled={props.status == "running"}
       boxShadow="xs"
-      _hover={{ bg: 'gray.300' }}
       _focus={{
         outline: 'none'
       }}
@@ -85,7 +89,7 @@ function NoGridCell(props: cellProps) {
       width={props.cellSize}
       bg={cellColor(props.isLive)}
       height={props.cellSize}
-      _hover={{ bg: 'gray.300' }}
+      disabled={props.status == "running"}
       _focus={{
         outline: 'none'
       }}
